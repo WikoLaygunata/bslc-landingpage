@@ -17,37 +17,37 @@ const year = computed(() => new Date().getFullYear())
 const socialLinks = [
   {
     href: 'https://www.youtube.com/c/BinusStudentLearningCommunity',
-    icon: '/youtube-white.svg',
+    icon: '/social/youtube-white.svg',
     label: 'YouTube',
     imgClass: 'h-7 w-7 sm:h-8 sm:w-8',
   },
   {
     href: 'https://twitter.com/BSLC_BINUS',
-    icon: '/x-white.svg',
+    icon: '/social/x-white.svg',
     label: 'X',
     imgClass: 'h-6 w-6 sm:h-7 sm:w-7',
   },
   {
     href: 'https://id.linkedin.com/company/binus-student-learning-community',
-    icon: '/linkedln.svg',
+    icon: '/social/linkedln.svg',
     label: 'LinkedIn',
     imgClass: 'h-7 w-7 sm:h-8 sm:w-8',
   },
   {
     href: 'https://liff.line.me/1645278921-kWRPP32q/?accountId=hlh6945o',
-    icon: '/line-white.svg',
+    icon: '/social/line-white.svg',
     label: 'LINE',
     imgClass: 'h-7 w-7 sm:h-8 sm:w-8',
   },
   {
     href: 'https://www.instagram.com/bslc_binus/',
-    icon: '/instagram-white.svg',
+    icon: '/social/instagram-white.svg',
     label: 'Instagram',
     imgClass: 'h-7 w-7 sm:h-8 sm:w-8',
   },
   {
     href: 'mailto:bslccommunity@gmail.com',
-    icon: '/email.svg',
+    icon: '/social/email.svg',
     label: 'Email',
     imgClass: 'h-8 w-8 sm:h-9 sm:w-9',
   },
@@ -68,7 +68,7 @@ const closeMenu = () => {
         <div class="flex items-center gap-3">
           <RouterLink to="/" class="flex items-center gap-3" @click="closeMenu">
             <img
-              src="/cropped-logo-192x192.png"
+              src="/logo/cropped-logo-192x192.png"
               alt="BSLC Logo"
               class="h-9 w-9 object-contain"
               draggable="false"
@@ -135,7 +135,7 @@ const closeMenu = () => {
         <div class="flex flex-col items-center sm:flex-row sm:justify-between">
           <div class="flex justify-center sm:flex-1 sm:justify-start">
             <img
-              src="/Logo_BSLC_White-01-1.png"
+              src="/logo/Logo_BSLC_White-01-1.png"
               alt="BSLC Logo"
               class="h-24 w-auto object-contain"
             />

@@ -1,5 +1,28 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tangerine';
+  src: url('/fonts/Tangerine-Regular.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --background: #ffffff;
@@ -15,11 +38,13 @@
   --gray-700: #595959;
   --gray-600: #7b7b7b;
 
-  --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-tangerine-family: 'Tangerine', cursive;
 }
 
 @theme inline {
   --font-sans: var(--font-poppins);
+  --font-tangerine: var(--font-tangerine-family);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
