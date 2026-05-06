@@ -11,17 +11,17 @@ export const landingData = reactive({
   articleDetailsBySlug: {},
   loading: {
     years: false,
-    events: false,
-    officers: false,
-    articles: false,
-    articleDetail: false,
+    eventsByYear: {},
+    officersByYear: {},
+    articlesByKey: {},
+    articleDetailsBySlug: {},
   },
   errors: {
     years: '',
-    events: '',
-    officers: '',
-    articles: '',
-    articleDetail: '',
+    eventsByYear: {},
+    officersByYear: {},
+    articlesByKey: {},
+    articleDetailsBySlug: {},
   },
 })
 
@@ -54,36 +54,34 @@ export async function ensureYearsLoaded() {
 export async function ensureEventsLoaded(year = currentYear) {
   const selectedYear = Number(year) || currentYear
 
-  if (landingData.eventsByYear[selectedYear] || landingData.loading.events) return
+  if (landingData.eventsByYear[selectedYear] || landingData.loading.eventsByYear[selectedYear]) return
 
-  landingData.loading.events = true
-  landingData.errors.events = ''
+  landingData.loading.eventsByYear[selectedYear] = true
+  landingData.errors.eventsByYear[selectedYear] = ''
 
   try {
     landingData.eventsByYear[selectedYear] = await getEvents(selectedYear)
   } catch (error) {
-    landingData.errors.events = error.message || 'Failed to load events.'
-    landingData.eventsByYear[selectedYear] = []
+    landingData.errors.eventsByYear[selectedYear] = error.message || 'Failed to load events.'
   } finally {
-    landingData.loading.events = false
+    landingData.loading.eventsByYear[selectedYear] = false
   }
 }
 
 export async function ensureOfficersLoaded(year = currentYear) {
   const selectedYear = Number(year) || currentYear
 
-  if (landingData.officersByYear[selectedYear] || landingData.loading.officers) return
+  if (landingData.officersByYear[selectedYear] || landingData.loading.officersByYear[selectedYear]) return
 
-  landingData.loading.officers = true
-  landingData.errors.officers = ''
+  landingData.loading.officersByYear[selectedYear] = true
+  landingData.errors.officersByYear[selectedYear] = ''
 
   try {
     landingData.officersByYear[selectedYear] = await getOfficers(selectedYear)
   } catch (error) {
-    landingData.errors.officers = error.message || 'Failed to load officers.'
-    landingData.officersByYear[selectedYear] = []
+    landingData.errors.officersByYear[selectedYear] = error.message || 'Failed to load officers.'
   } finally {
-    landingData.loading.officers = false
+    landingData.loading.officersByYear[selectedYear] = false
   }
 }
 
@@ -98,37 +96,33 @@ export function createArticlesKey(params = {}) {
 export async function ensureArticlesLoaded(params = {}) {
   const key = createArticlesKey(params)
 
-  if (landingData.articlesByKey[key] || landingData.loading.articles) return
+  if (landingData.articlesByKey[key] || landingData.loading.articlesByKey[key]) return
 
-  landingData.loading.articles = true
-  landingData.errors.articles = ''
+  landingData.loading.articlesByKey[key] = true
+  landingData.errors.articlesByKey[key] = ''
 
   try {
     landingData.articlesByKey[key] = await getArticles(params)
   } catch (error) {
-    landingData.errors.articles = error.message || 'Failed to load articles.'
-    landingData.articlesByKey[key] = {
-      items: [],
-      meta: { currentPage: 1, pageSize: params.pageSize ?? 12, total: 0, lastPage: 1 },
-      raw: null,
-    }
+    landingData.errors.articlesByKey[key] = error.message || 'Failed to load articles.'
   } finally {
-    landingData.loading.articles = false
+    landingData.loading.articlesByKey[key] = false
   }
 }
 
 export async function ensureArticleDetailLoaded(slug) {
-  if (!slug || landingData.articleDetailsBySlug[slug] || landingData.loading.articleDetail) return
+  if (!slug || landingData.articleDetailsBySlug[slug] || landingData.loading.articleDetailsBySlug[slug])
+    return
 
-  landingData.loading.articleDetail = true
-  landingData.errors.articleDetail = ''
+  landingData.loading.articleDetailsBySlug[slug] = true
+  landingData.errors.articleDetailsBySlug[slug] = ''
 
   try {
     landingData.articleDetailsBySlug[slug] = await getArticleDetail(slug)
   } catch (error) {
-    landingData.errors.articleDetail = error.message || 'Failed to load article detail.'
-    landingData.articleDetailsBySlug[slug] = null
+    landingData.errors.articleDetailsBySlug[slug] =
+      error.message || 'Failed to load article detail.'
   } finally {
-    landingData.loading.articleDetail = false
+    landingData.loading.articleDetailsBySlug[slug] = false
   }
 }

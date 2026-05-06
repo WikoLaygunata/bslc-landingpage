@@ -48,6 +48,8 @@ const years = computed(() => {
 })
 
 const officers = computed(() => landingData.officersByYear[selectedYear.value] || [])
+const isLoadingOfficers = computed(() => landingData.loading.officersByYear[selectedYear.value])
+const officersError = computed(() => landingData.errors.officersByYear[selectedYear.value] || '')
 const officersByTitle = computed(() => {
   return officers.value.reduce((map, officer) => {
     map[officer.title] = officer
@@ -110,13 +112,13 @@ watch(selectedYear, async (year) => {
       </div>
 
       <p
-        v-if="landingData.errors.years || landingData.errors.officers"
+        v-if="landingData.errors.years || officersError"
         class="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
       >
-        {{ landingData.errors.years || landingData.errors.officers }}
+        {{ landingData.errors.years || officersError }}
       </p>
 
-      <div v-if="landingData.loading.officers" class="mt-12 space-y-10">
+      <div v-if="isLoadingOfficers" class="mt-12 space-y-10">
         <div
           v-for="group in structureGroups"
           :key="group.name"

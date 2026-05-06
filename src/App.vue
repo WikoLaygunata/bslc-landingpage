@@ -54,8 +54,7 @@ const socialLinks = [
   },
 ]
 
-const isActive = (to) =>
-  route.path === to
+const isActive = (to) => route.path === to || (to !== '/' && route.path.startsWith(`${to}/`))
 
 const closeMenu = () => {
   isOpen.value = false

@@ -20,6 +20,8 @@ const events = computed(() => {
     return new Date(b.created_at) - new Date(a.created_at)
   })
 })
+const isLoadingEvents = computed(() => landingData.loading.eventsByYear[selectedYear.value])
+const eventsError = computed(() => landingData.errors.eventsByYear[selectedYear.value] || '')
 
 function formatDate(date) {
   if (!date) return ''
@@ -86,13 +88,13 @@ watch(selectedYear, async (year) => {
       </div>
 
       <p
-        v-if="landingData.errors.years || landingData.errors.events"
+        v-if="landingData.errors.years || eventsError"
         class="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
       >
-        {{ landingData.errors.years || landingData.errors.events }}
+        {{ landingData.errors.years || eventsError }}
       </p>
 
-      <div v-if="landingData.loading.events" class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div v-if="isLoadingEvents" class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div
           v-for="index in 4"
           :key="index"

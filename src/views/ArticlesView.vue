@@ -17,6 +17,8 @@ const articles = computed(() => articlePage.value?.items || [])
 const meta = computed(
   () => articlePage.value?.meta || { currentPage: page.value, lastPage: 1, total: 0 },
 )
+const isLoadingArticles = computed(() => landingData.loading.articlesByKey[articlesKey.value])
+const articlesError = computed(() => landingData.errors.articlesByKey[articlesKey.value] || '')
 const paginationItems = computed(() => {
   const lastPage = meta.value.lastPage
   const currentPage = page.value
@@ -97,14 +99,14 @@ watch([search, page], () => {
       </div>
 
       <p
-        v-if="landingData.errors.articles"
+        v-if="articlesError"
         class="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
       >
-        {{ landingData.errors.articles }}
+        {{ articlesError }}
       </p>
 
       <div
-        v-if="landingData.loading.articles"
+        v-if="isLoadingArticles"
         class="mt-12 grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4"
       >
         <div
