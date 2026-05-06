@@ -1,22 +1,25 @@
 import { reactive } from 'vue'
-import { getArticleDetail, getArticles, getEvents, getVariableMap } from '@/api/api'
+import { getArticleDetail, getArticles, getEvents, getOfficers, getVariableMap } from '@/api/api'
 
 const currentYear = new Date().getFullYear()
 
 export const landingData = reactive({
   years: [],
   eventsByYear: {},
+  officersByYear: {},
   articlesByKey: {},
   articleDetailsBySlug: {},
   loading: {
     years: false,
     events: false,
+    officers: false,
     articles: false,
     articleDetail: false,
   },
   errors: {
     years: '',
     events: '',
+    officers: '',
     articles: '',
     articleDetail: '',
   },
@@ -63,6 +66,24 @@ export async function ensureEventsLoaded(year = currentYear) {
     landingData.eventsByYear[selectedYear] = []
   } finally {
     landingData.loading.events = false
+  }
+}
+
+export async function ensureOfficersLoaded(year = currentYear) {
+  const selectedYear = Number(year) || currentYear
+
+  if (landingData.officersByYear[selectedYear] || landingData.loading.officers) return
+
+  landingData.loading.officers = true
+  landingData.errors.officers = ''
+
+  try {
+    landingData.officersByYear[selectedYear] = await getOfficers(selectedYear)
+  } catch (error) {
+    landingData.errors.officers = error.message || 'Failed to load officers.'
+    landingData.officersByYear[selectedYear] = []
+  } finally {
+    landingData.loading.officers = false
   }
 }
 
