@@ -61,55 +61,91 @@ watch(slug, (nextSlug) => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-white">
-    <section class="mx-auto max-w-4xl px-4 py-10 sm:px-6 md:py-14">
-      <RouterLink to="/articles" class="font-semibold text-aqua transition hover:text-aqua-hover">
-        ← Back to Articles
-      </RouterLink>
+  <main class="min-h-screen overflow-x-clip bg-white pb-10">
+    <section
+      class="relative overflow-hidden bg-linear-to-b from-white via-slate-50 to-white px-4 py-10 sm:px-6 md:py-14"
+    >
+      <div
+        class="absolute right-0 top-0 h-72 w-72 translate-x-1/2 rounded-full bg-aqua/5 blur-3xl sm:h-96 sm:w-96 sm:translate-x-1/3 sm:bg-aqua/15"
+      ></div>
+      <div
+        class="absolute bottom-20 left-0 h-64 w-64 -translate-x-1/2 rounded-full bg-dark-green/5 blur-3xl sm:h-80 sm:w-80 sm:-translate-x-1/3 sm:bg-dark-green/10"
+      ></div>
 
-      <div v-if="isLoadingArticle" class="mt-8 space-y-5">
-        <div class="h-72 animate-pulse rounded-3xl bg-slate-100"></div>
-        <div class="h-8 w-3/4 animate-pulse rounded bg-slate-100"></div>
-        <div class="h-4 w-40 animate-pulse rounded bg-slate-100"></div>
-        <div class="space-y-3">
-          <div v-for="index in 5" :key="index" class="h-4 animate-pulse rounded bg-slate-100"></div>
+      <div class="relative z-10 mx-auto max-w-4xl">
+        <RouterLink
+          to="/articles"
+          class="inline-flex items-center rounded-full border border-aqua/20 bg-white/85 px-4 py-2 text-sm font-bold text-aqua shadow-sm backdrop-blur transition hover:-translate-x-1 hover:bg-aqua hover:text-white"
+        >
+          ← Back to Articles
+        </RouterLink>
+
+        <div v-if="isLoadingArticle" class="mt-8 space-y-5">
+          <div
+            class="h-72 animate-pulse rounded-4xl bg-slate-100 shadow-sm ring-1 ring-slate-200 md:h-96"
+          ></div>
+          <div class="rounded-4xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+            <div class="h-4 w-40 animate-pulse rounded-full bg-slate-100"></div>
+            <div class="mt-4 h-9 w-3/4 animate-pulse rounded-full bg-slate-100"></div>
+            <div class="mt-6 space-y-3">
+              <div
+                v-for="index in 6"
+                :key="index"
+                class="h-4 animate-pulse rounded-full bg-slate-100"
+              ></div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div v-else-if="articleError" class="mt-8 rounded-xl bg-red-50 px-4 py-3 text-red-700">
-        {{ articleError }}
-      </div>
+        <div
+          v-else-if="articleError"
+          class="mt-8 rounded-3xl border border-red-100 bg-red-50 px-6 py-5 font-medium text-red-700 shadow-sm"
+        >
+          {{ articleError }}
+        </div>
 
-      <article v-else-if="article" class="mt-8">
-        <img
-          v-if="article.thumbnail"
-          :src="getStorageUrl(article.thumbnail)"
-          :alt="article.title"
-          class="h-72 w-full rounded-3xl object-cover shadow-lg md:h-96"
-        />
+        <article v-else-if="article" class="mt-8">
+          <img
+            v-if="article.thumbnail"
+            :src="getStorageUrl(article.thumbnail)"
+            :alt="article.title"
+            class="h-72 w-full rounded-3xl object-cover shadow-lg md:h-96"
+          />
+          <div
+            v-else
+            class="flex h-72 w-full items-center justify-center rounded-3xl bg-linear-to-br from-dark-green to-aqua p-8 text-center shadow-lg md:h-96"
+          >
+            <span class="text-3xl font-bold text-white md:text-5xl">{{ article.title }}</span>
+          </div>
+
+          <p class="mt-8 text-sm font-semibold text-aqua">{{ formatDate(article.created_at) }}</p>
+          <h1 class="mt-3 text-3xl font-bold leading-tight text-slate-900 md:text-5xl">
+            {{ article.title }}
+          </h1>
+
+          <div
+            class="prose-article mt-8 max-w-none text-base leading-8 text-slate-700"
+            v-html="normalizedArticleContent"
+          ></div>
+        </article>
+
         <div
           v-else
-          class="flex h-72 w-full items-center justify-center rounded-3xl bg-linear-to-br from-dark-green to-aqua p-8 text-center shadow-lg md:h-96"
+          class="mt-8 rounded-3xl border border-dashed border-aqua/30 bg-white/85 px-6 py-16 text-center shadow-xl shadow-slate-100"
         >
-          <span class="text-3xl font-bold text-white md:text-5xl">{{ article.title }}</span>
+          <div
+            class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-aqua/10 text-3xl font-bold text-aqua"
+          >
+            ?
+          </div>
+          <p class="text-lg font-semibold text-slate-700">Article not found.</p>
+          <RouterLink
+            to="/articles"
+            class="mt-5 inline-flex rounded-full bg-aqua px-5 py-2 text-sm font-bold text-white shadow-lg shadow-aqua/20 transition hover:bg-aqua-hover"
+          >
+            Browse Articles
+          </RouterLink>
         </div>
-
-        <p class="mt-8 text-sm font-semibold text-aqua">{{ formatDate(article.created_at) }}</p>
-        <h1 class="mt-3 text-3xl font-bold leading-tight text-slate-900 md:text-5xl">
-          {{ article.title }}
-        </h1>
-
-        <div
-          class="prose-article mt-8 max-w-none text-base leading-8 text-slate-700"
-          v-html="normalizedArticleContent"
-        ></div>
-      </article>
-
-      <div
-        v-else
-        class="mt-8 rounded-3xl border border-dashed border-slate-300 px-6 py-16 text-center"
-      >
-        <p class="text-lg font-semibold text-slate-700">Article not found.</p>
       </div>
     </section>
   </main>

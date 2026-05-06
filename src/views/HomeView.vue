@@ -5,7 +5,7 @@ const googleFormAction =
   'https://docs.google.com/forms/u/0/d/e/1FAIpQLSchq426C-GPGO8n1S7PQ-PZIje0FQiuzmLE2hW9rnS-Fa0hMA/formResponse'
 
 const inputClass =
-  'w-full border-b border-gray-500 bg-transparent py-3 text-white placeholder-gray-400 transition duration-300 focus:border-aqua focus:outline-none'
+  'w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/45 transition duration-300 focus:border-aqua focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-aqua/20'
 
 const dynamicWords = ['CONNECT', 'LEARN', 'GROW']
 const wordIndex = ref(0)
@@ -73,7 +73,7 @@ let successTimeoutId = null
 onMounted(() => {
   wordIntervalId = window.setInterval(() => {
     wordIndex.value = (wordIndex.value + 1) % dynamicWords.length
-  }, 1000)
+  }, 1500)
 })
 
 onUnmounted(() => {
@@ -109,11 +109,11 @@ async function handleContactSubmit(event) {
 </script>
 
 <template>
-  <main>
+  <main class="overflow-x-clip">
     <Transition name="success-message">
       <div
         v-if="showSuccess"
-        class="fixed left-1/2 top-24 z-60 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-xl border border-aqua/30 bg-white px-5 py-4 text-center text-sm font-semibold text-aqua shadow-xl"
+        class="fixed left-1/2 top-24 z-60 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-2xl border border-aqua/30 bg-white/95 px-5 py-4 text-center text-sm font-semibold text-aqua shadow-2xl shadow-aqua/10 backdrop-blur"
       >
         Message sent successfully. Thank you for contacting BSLC.
       </div>
@@ -131,9 +131,20 @@ async function handleContactSubmit(event) {
         />
       </div>
       <div class="absolute inset-0 z-10 bg-black/60"></div>
+      <div
+        class="pointer-events-none absolute -left-32 bottom-24 z-10 h-72 w-72 rounded-full bg-aqua/25 blur-3xl"
+      ></div>
+      <div
+        class="pointer-events-none absolute -right-28 top-24 z-10 h-80 w-80 rounded-full bg-cyan/15 blur-3xl"
+      ></div>
+      <div
+        class="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-48 bg-linear-to-t from-black/50 to-transparent"
+      ></div>
 
       <div class="relative z-20 flex flex-col items-center justify-center px-4">
-        <p class="text-lg font-light uppercase tracking-widest text-white md:text-xl">
+        <p
+          class="rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-light uppercase tracking-[0.28em] text-white/90 shadow-lg backdrop-blur md:text-base"
+        >
           BINUS STUDENT LEARNING COMMUNITY
         </p>
 
@@ -144,21 +155,26 @@ async function handleContactSubmit(event) {
             <span>Where</span>
             <span class="md:ml-2">Students</span>
           </span>
-          <span class="inline-block w-[9ch] shrink-0 text-left ms-4">
-            <span class="font-bold text-aqua drop-shadow-[0_2px_8px_rgba(25,168,157,0.7)]">
-              {{ dynamicWords[wordIndex] }}
-            </span>
+          <span class="ms-4 inline-block w-[9ch] shrink-0 overflow-hidden text-left">
+            <Transition name="hero-word" mode="out-in">
+              <span
+                :key="dynamicWords[wordIndex]"
+                class="inline-block font-bold text-aqua drop-shadow-[0_2px_8px_rgba(25,168,157,0.7)]"
+              >
+                {{ dynamicWords[wordIndex] }}
+              </span>
+            </Transition>
           </span>
         </h1>
       </div>
 
       <div
-        class="absolute bottom-0 left-1/2 z-20 w-11/12 max-w-6xl -translate-x-1/2 translate-y-1/4 rounded-[15px] bg-aqua px-4 py-6 text-center text-white shadow-xl transition-all duration-300 ease-in-out md:translate-y-1/3 md:rounded-[30px] md:px-6 md:py-8 lg:translate-y-1/2 lg:py-10"
+        class="absolute bottom-0 left-1/2 z-20 w-11/12 max-w-6xl -translate-x-1/2 translate-y-1/4 overflow-hidden rounded-[20px] border border-white/25 bg-linear-to-br from-aqua via-aqua to-dark-green px-4 py-6 text-center text-white shadow-2xl shadow-aqua/25 transition-all duration-300 ease-in-out before:absolute before:-left-20 before:-top-20 before:h-48 before:w-48 before:rounded-full before:bg-white/15 before:blur-2xl after:absolute after:-bottom-20 after:-right-20 after:h-52 after:w-52 after:rounded-full after:bg-cyan/20 after:blur-2xl md:translate-y-1/3 md:rounded-[30px] md:px-6 md:py-8 lg:translate-y-1/2 lg:py-10"
       >
-        <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold leading-none">
+        <h2 class="relative text-[clamp(1.5rem,4vw,2.5rem)] font-bold leading-none">
           About <span class="font-tangerine">Us</span>
         </h2>
-        <p class="mt-2 px-2 text-[clamp(0.875rem,2.5vw,1rem)] leading-snug">
+        <p class="relative mt-2 px-2 text-[clamp(0.875rem,2.5vw,1rem)] leading-snug text-white/95">
           <strong>BINUS Student Learning Community (BSLC)</strong> adalah sebuah unit kegiatan
           kemahasiswaan yang berfokus pada bidang penalaran. Sejak pendiriannya di tahun 2008, BSLC
           terus berkembang sebagai <strong>rekan belajar bagi para Binusian</strong> dalam
@@ -170,24 +186,32 @@ async function handleContactSubmit(event) {
       </div>
     </section>
 
-    <section id="visimisi" class="relative overflow-hidden bg-white py-28 md:py-36">
+    <section
+      id="visimisi"
+      class="relative overflow-hidden bg-linear-to-b from-white via-slate-50 to-white py-28 md:py-36"
+    >
+      <div
+        class="pointer-events-none absolute left-1/2 top-1/2 h-128 w-lg -translate-x-1/2 -translate-y-1/2 rounded-full bg-aqua/5 blur-3xl"
+      ></div>
       <img
         src="/home/vision.svg"
         alt=""
-        class="absolute -right-28 top-0 z-0 h-[400px] w-[400px] -translate-y-1/4 object-contain opacity-100 md:-right-36 md:h-[500px] md:w-[500px] lg:-right-24 lg:h-[600px] lg:w-[600px]"
+        class="absolute -right-28 top-0 z-0 h-[400px] w-[400px] -translate-y-1/4 object-contain opacity-70 drop-shadow-2xl md:-right-36 md:h-[500px] md:w-[500px] lg:-right-24 lg:h-[600px] lg:w-[600px]"
         aria-hidden="true"
       />
       <img
         src="/home/mission.svg"
         alt=""
-        class="absolute -left-28 bottom-0 z-0 h-[400px] w-[400px] translate-y-1/4 object-contain opacity-100 md:-left-36 md:h-[500px] md:w-[500px] lg:-left-24 lg:h-[600px] lg:w-[600px]"
+        class="absolute -left-28 bottom-0 z-0 h-[400px] w-[400px] translate-y-1/4 object-contain opacity-70 drop-shadow-2xl md:-left-36 md:h-[500px] md:w-[500px] lg:-left-24 lg:h-[600px] lg:w-[600px]"
         aria-hidden="true"
       />
 
       <div class="relative z-10 mx-auto max-w-7xl space-y-24 px-4 lg:px-8">
         <div class="flex justify-end">
           <div class="w-full md:w-3/5 lg:w-1/2">
-            <div class="p-4 text-center md:p-8 md:text-right">
+            <div
+              class="rounded-3xl border border-white/70 bg-white/70 p-6 text-center shadow-xl shadow-slate-200/50 backdrop-blur md:p-8 md:text-right"
+            >
               <h3 class="text-4xl font-bold leading-tight text-gray-800 md:text-5xl">
                 <span class="font-tangerine text-aqua">Our</span> Vision
               </h3>
@@ -202,7 +226,9 @@ async function handleContactSubmit(event) {
 
         <div class="flex justify-start">
           <div class="w-full md:w-3/5 lg:w-1/2">
-            <div class="p-4 text-center md:p-8 md:text-left">
+            <div
+              class="rounded-3xl border border-white/70 bg-white/70 p-6 text-center shadow-xl shadow-slate-200/50 backdrop-blur md:p-8 md:text-left"
+            >
               <h3 class="text-4xl font-bold leading-tight text-gray-800 md:text-5xl">
                 <span class="font-tangerine text-aqua">Our</span> Mission
               </h3>
@@ -233,25 +259,33 @@ async function handleContactSubmit(event) {
 
     <section
       id="about"
-      class="flex flex-col items-center justify-center bg-slate-100 px-4 py-8 text-center"
+      class="relative flex flex-col items-center justify-center overflow-hidden bg-linear-to-b from-slate-100 via-white to-slate-100 px-4 py-8 text-center"
     >
+      <div
+        class="pointer-events-none absolute -right-32 top-20 h-80 w-80 rounded-full bg-aqua/10 blur-3xl"
+      ></div>
+      <div
+        class="pointer-events-none absolute -left-32 bottom-20 h-80 w-80 rounded-full bg-dark-green/10 blur-3xl"
+      ></div>
       <section id="roles" class="w-full px-2 py-20 sm:px-4 lg:px-6">
-        <div class="mx-auto max-w-7xl text-center">
+        <div class="relative mx-auto max-w-7xl text-center">
           <div class="mb-12">
             <p class="font-tangerine text-4xl font-bold text-aqua">Membership</p>
             <h2 class="mt-2 text-4xl font-bold text-slate-800">Explore the Roles</h2>
           </div>
 
-          <div class="flex justify-center border-b border-slate-300">
+          <div
+            class="mx-auto flex w-fit justify-center rounded-full border border-slate-200 bg-white p-1 shadow-lg shadow-slate-200/60"
+          >
             <button
               v-for="role in roleKeys"
               :key="role"
               type="button"
-              class="cursor-pointer px-4 py-3 text-base font-semibold capitalize transition-colors duration-300 sm:px-6 sm:text-lg"
+              class="cursor-pointer rounded-full px-4 py-2 text-base font-semibold capitalize transition-all duration-300 sm:px-6 sm:text-lg"
               :class="
                 activeRole === role
-                  ? 'border-b-2 border-aqua text-aqua'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-aqua text-white shadow-md shadow-aqua/25'
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
               "
               @click="activeRole = role"
             >
@@ -259,15 +293,19 @@ async function handleContactSubmit(event) {
             </button>
           </div>
 
-          <div class="mt-12">
-            <div class="grid items-center gap-10 text-left md:grid-cols-2 lg:gap-1">
-              <div class="flex flex-col items-center text-center">
+          <div
+            class="mt-10 rounded-4xl border border-white bg-white/80 p-6 text-left shadow-2xl shadow-slate-200/70 backdrop-blur md:p-10"
+          >
+            <div class="grid items-center gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-12">
+              <div
+                class="flex h-full min-h-80 flex-col items-center justify-center rounded-3xl bg-linear-to-b from-aqua/10 to-transparent p-8 text-center"
+              >
                 <img
                   :src="activeRoleData.icon"
                   :alt="`${activeRoleData.title} Icon`"
-                  class="mb-4 h-24 w-24"
+                  class="mb-4 h-28 w-28 drop-shadow-xl"
                 />
-                <p class="text-4xl font-bold text-aqua">{{ activeRoleData.count }}</p>
+                <p class="text-5xl font-bold text-aqua">{{ activeRoleData.count }}</p>
                 <p class="text-lg text-slate-600">{{ activeRoleData.title }}</p>
               </div>
 
@@ -283,7 +321,7 @@ async function handleContactSubmit(event) {
                       <li
                         v-for="benefit in activeRoleData.benefits"
                         :key="benefit"
-                        class="flex items-center"
+                        class="flex items-center rounded-xl bg-slate-50 px-3 py-2"
                       >
                         <svg
                           class="mr-2 h-5 w-5 shrink-0 text-aqua"
@@ -310,7 +348,7 @@ async function handleContactSubmit(event) {
                       <span
                         v-for="division in activeRoleData.divisions"
                         :key="division"
-                        class="inline-flex w-60 items-center rounded-lg px-3 py-2 font-normal text-white"
+                        class="inline-flex w-60 items-center rounded-xl px-3 py-2 font-normal text-white shadow-md"
                         :style="{ backgroundColor: divisionColors[division] }"
                       >
                         {{ division }}
@@ -342,8 +380,13 @@ async function handleContactSubmit(event) {
         aria-hidden="true"
       />
 
+      <div
+        class="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-aqua/30 to-transparent"
+      ></div>
       <div class="relative z-10 mx-auto max-w-4xl">
-        <header>
+        <header
+          class="rounded-4xl border border-slate-100 bg-white/80 px-6 py-8 shadow-xl shadow-slate-100/80 backdrop-blur"
+        >
           <h3 class="font-tangerine text-5xl italic text-aqua">History</h3>
           <h2 class="mt-2 text-4xl font-bold text-slate-800 md:text-5xl">
             Where Journey of Growth Began
@@ -357,21 +400,31 @@ async function handleContactSubmit(event) {
         </header>
 
         <div class="mt-16">
-          <div class="relative mx-auto flex max-w-lg items-start justify-between">
+          <div
+            class="relative mx-auto flex max-w-lg items-start justify-between rounded-full bg-slate-50 px-4 py-3 shadow-inner"
+          >
             <div
-              class="absolute left-1/2 top-[38px] -z-10 h-0.5 w-4/5 -translate-x-1/2 bg-slate-200"
+              class="absolute left-1/2 top-[48px] z-0 h-0.5 w-4/5 -translate-x-1/2 bg-slate-200"
             ></div>
 
-            <div v-for="year in years" :key="year" class="flex flex-col items-center gap-4">
+            <div
+              v-for="year in years"
+              :key="year"
+              class="relative z-10 flex flex-col items-center gap-4"
+            >
               <button
                 type="button"
-                class="text-2xl font-light transition-colors duration-300 md:text-3xl"
-                :class="activeYear === year ? 'text-aqua' : 'text-slate-300 hover:text-aqua'"
+                class="rounded-full px-3 py-1 text-2xl font-light transition-all duration-300 md:text-3xl"
+                :class="
+                  activeYear === year
+                    ? 'bg-white text-aqua shadow-md'
+                    : 'text-slate-300 hover:text-aqua'
+                "
                 @click="activeYear = year"
               >
                 {{ year }}
               </button>
-              <svg class="h-6 w-6 bg-white p-1" viewBox="0 0 24 24" aria-hidden="true">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" aria-hidden="true">
                 <circle
                   cx="12"
                   cy="12"
@@ -392,9 +445,11 @@ async function handleContactSubmit(event) {
             </div>
           </div>
 
-          <div class="mt-8 min-h-[120px]">
+          <div
+            class="mx-auto mt-8 flex h-[250px] max-w-2xl items-center justify-center rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-100 md:h-[210px]"
+          >
             <p
-              class="mx-auto max-w-xl leading-loose text-slate-700"
+              class="mx-auto max-w-xl text-center leading-loose text-slate-700"
               v-html="historyContent[activeYear]"
             ></p>
           </div>
@@ -402,7 +457,13 @@ async function handleContactSubmit(event) {
       </div>
     </section>
 
-    <section id="wheel" class="w-full overflow-hidden bg-white py-16 md:py-24">
+    <section
+      id="wheel"
+      class="relative w-full overflow-hidden bg-linear-to-b from-white via-slate-50 to-white py-16 md:py-24"
+    >
+      <div
+        class="pointer-events-none absolute left-1/2 top-20 h-72 w-72 -translate-x-1/2 rounded-full bg-aqua/10 blur-3xl"
+      ></div>
       <div
         class="relative flex w-full"
         style="
@@ -424,16 +485,16 @@ async function handleContactSubmit(event) {
       >
         <div class="wheel-scroll flex">
           <img
-            src="/home/wheel.svg"
+            src="/home/wheel.png"
             alt="Kumpulan logo dan gambar layanan"
             class="h-96 max-w-none shrink-0"
           />
-          <img src="/home/wheel.svg" alt="" class="h-96 max-w-none shrink-0" aria-hidden="true" />
+          <img src="/home/wheel.png" alt="" class="h-96 max-w-none shrink-0" aria-hidden="true" />
         </div>
       </div>
 
       <div
-        class="mx-auto mt-32 flex max-w-6xl flex-col items-center justify-center gap-6 px-4 md:flex-row md:gap-8"
+        class="relative mx-auto mt-32 flex w-fit max-w-[calc(100%-2rem)] flex-col items-center justify-center gap-6 rounded-3xl border border-slate-100 bg-white/90 px-8 py-6 shadow-2xl shadow-slate-200/70 backdrop-blur md:flex-row md:gap-8"
       >
         <p class="text-2xl font-bold text-slate-700 md:text-3xl">Supported by</p>
         <img src="/logo/logo_dewaweb.svg" alt="Logo Dewaweb" class="h-auto w-60 object-contain" />
@@ -446,6 +507,12 @@ async function handleContactSubmit(event) {
     >
       <div
         class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,0,0,0.9)_0%,transparent_50%)]"
+      ></div>
+      <div
+        class="pointer-events-none absolute -left-24 bottom-10 h-80 w-80 rounded-full bg-aqua/20 blur-3xl"
+      ></div>
+      <div
+        class="pointer-events-none absolute right-0 top-0 h-96 w-96 translate-x-1/3 rounded-full bg-cyan/10 blur-3xl"
       ></div>
 
       <div
@@ -460,9 +527,12 @@ async function handleContactSubmit(event) {
           <p class="mt-4 text-lg text-white">Let's Build Something Together</p>
         </div>
 
-        <form class="w-full" @submit.prevent="handleContactSubmit">
-          <div class="flex flex-col gap-y-10 md:flex-row md:gap-x-8">
-            <div class="flex flex-1 flex-col gap-10">
+        <form
+          class="w-full rounded-4xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/20 backdrop-blur md:p-8"
+          @submit.prevent="handleContactSubmit"
+        >
+          <div class="flex flex-col gap-y-6 md:flex-row md:gap-x-6">
+            <div class="flex flex-1 flex-col gap-6">
               <div>
                 <label for="contact-name" class="sr-only">Your Name</label>
                 <input
@@ -516,7 +586,7 @@ async function handleContactSubmit(event) {
               <div class="mt-8 text-right">
                 <button
                   type="submit"
-                  class="border border-aqua px-10 py-3 font-semibold text-aqua transition duration-300 hover:bg-aqua hover:text-[#0F2D2A] disabled:cursor-not-allowed disabled:opacity-60"
+                  class="rounded-xl border border-aqua bg-aqua px-10 py-3 font-semibold text-[#0F2D2A] shadow-lg shadow-aqua/20 transition duration-300 hover:bg-transparent hover:text-aqua disabled:cursor-not-allowed disabled:opacity-60"
                   :disabled="isSubmitting"
                 >
                   {{ isSubmitting ? 'SENDING...' : 'SUBMIT' }}
@@ -542,7 +612,24 @@ async function handleContactSubmit(event) {
 }
 
 .wheel-scroll {
-  animation: wheel-scroll 15s linear infinite;
+  animation: wheel-scroll 30s linear infinite;
+}
+
+.hero-word-enter-active,
+.hero-word-leave-active {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.hero-word-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.hero-word-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 .success-message-enter-active,
