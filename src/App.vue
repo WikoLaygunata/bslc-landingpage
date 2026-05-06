@@ -8,6 +8,7 @@ const route = useRoute()
 const links = [
   { to: '/', label: 'Home' },
   { to: '/events', label: 'Events' },
+  { to: '/articles', label: 'Articles' },
   { to: '/structure', label: 'Structure' },
   { to: '/products', label: 'Products' },
 ]
@@ -63,7 +64,7 @@ const closeMenu = () => {
 
 <template>
   <div class="flex min-h-screen flex-col bg-background text-foreground antialiased">
-    <header class="sticky top-0 z-50 bg-white px-6 py-4 text-black shadow-md md:px-20 xl:px-28">
+    <header class="sticky top-0 z-50 bg-white px-6 py-6 text-black shadow-md md:px-20 xl:px-28">
       <div class="mx-auto flex max-w-6xl items-center justify-between">
         <div class="flex items-center gap-3">
           <RouterLink to="/" class="flex items-center gap-3" @click="closeMenu">
@@ -131,13 +132,13 @@ const closeMenu = () => {
     </main>
 
     <footer class="bg-foreground text-white">
-      <section class="mx-auto max-w-6xl px-6 py-10 sm:px-10 sm:py-12 md:px-20 lg:px-28">
+      <section class="mx-auto max-w-6xl py-10 sm:py-12 px-8">
         <div class="flex flex-col items-center sm:flex-row sm:justify-between">
           <div class="flex justify-center sm:flex-1 sm:justify-start">
             <img
               src="/logo/Logo_BSLC_White-01-1.png"
               alt="BSLC Logo"
-              class="h-24 w-auto object-contain"
+              class="h-28 w-auto object-contain"
             />
           </div>
 

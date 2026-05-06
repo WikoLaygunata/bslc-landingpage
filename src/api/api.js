@@ -1,43 +1,9 @@
-const CACHE_TTL_MS = 60 * 1000
-
-const responseCache = new Map()
-
 function trimTrailingSlash(value) {
   return String(value || '').replace(/\/+$/, '')
 }
 
 export const BASE_URL = trimTrailingSlash(import.meta.env.VITE_API_URL)
 export const STORAGE_URL = trimTrailingSlash(import.meta.env.VITE_IMAGE_BASE_URL)
-
-function cloneData(data) {
-  if (typeof structuredClone === 'function') return structuredClone(data)
-  return JSON.parse(JSON.stringify(data))
-}
-
-function createCacheKey(url, options = {}) {
-  const method = options.method || 'GET'
-  const body = options.body || ''
-  return `${method}:${url}:${body}`
-}
-
-function readCache(cacheKey) {
-  const cached = responseCache.get(cacheKey)
-
-  if (!cached) return null
-  if (cached.expiresAt <= Date.now()) {
-    responseCache.delete(cacheKey)
-    return null
-  }
-
-  return cloneData(cached.data)
-}
-
-function writeCache(cacheKey, data, ttlMs) {
-  responseCache.set(cacheKey, {
-    data: cloneData(data),
-    expiresAt: Date.now() + ttlMs,
-  })
-}
 
 function createQuery(params = {}) {
   const query = new URLSearchParams()
@@ -52,14 +18,8 @@ function createQuery(params = {}) {
 }
 
 async function fetchJson(path, options = {}) {
-  const { useCache = true, ttlMs = CACHE_TTL_MS, ...fetchOptions } = options
+  const fetchOptions = options
   const url = path.startsWith('http') ? path : `${BASE_URL}${path}`
-  const cacheKey = createCacheKey(url, fetchOptions)
-
-  if (useCache) {
-    const cachedData = readCache(cacheKey)
-    if (cachedData) return cachedData
-  }
 
   const response = await fetch(url, {
     headers: {
@@ -70,13 +30,13 @@ async function fetchJson(path, options = {}) {
   })
 
   const contentType = response.headers.get('content-type') || ''
-  const data = contentType.includes('application/json') ? await response.json() : await response.text()
+  const data = contentType.includes('application/json')
+    ? await response.json()
+    : await response.text()
 
   if (!response.ok) {
     throw new Error(data?.message || `Request failed with status ${response.status}`)
   }
-
-  if (useCache) writeCache(cacheKey, data, ttlMs)
 
   return data
 }
@@ -85,10 +45,6 @@ function parseList(data) {
   if (Array.isArray(data)) return data
   if (Array.isArray(data?.data)) return data.data
   return []
-}
-
-export function clearApiCache() {
-  responseCache.clear()
 }
 
 export function getStorageUrl(path) {
@@ -136,14 +92,14 @@ export async function getArticles(options = {}) {
 
 export async function getVariables(names = [], options = {}) {
   const list = Array.isArray(names) ? names : [names]
-  const body = JSON.stringify({ names: list })
+  const query = new URLSearchParams()
 
-  const data = await fetchJson('/variables', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body,
-    ...options,
+  list.forEach((name, index) => {
+    if (name) query.append(`names[${index}]`, name)
   })
+
+  const queryString = query.toString()
+  const data = await fetchJson(`/variables${queryString ? `?${queryString}` : ''}`, options)
 
   return parseList(data)
 }
