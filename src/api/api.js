@@ -47,6 +47,23 @@ function parseList(data) {
   return []
 }
 
+function parsePaginated(data) {
+  const items = Array.isArray(data?.data) ? data.data : []
+
+  return {
+    items,
+    meta: {
+      currentPage: data?.current_page ?? 1,
+      pageSize: data?.per_page ?? items.length,
+      total: data?.total ?? items.length,
+      lastPage: data?.last_page ?? 1,
+      from: data?.from ?? null,
+      to: data?.to ?? null,
+    },
+    raw: data,
+  }
+}
+
 export function getStorageUrl(path) {
   if (!path) return ''
   if (path.startsWith('http')) return path
@@ -85,9 +102,19 @@ export async function getEvents(year, options = {}) {
   return parseList(data)
 }
 
-export async function getArticles(options = {}) {
-  const data = await fetchJson('/articles', options)
-  return parseList(data)
+export async function getArticles(params = {}, options = {}) {
+  const query = createQuery({
+    search: params.search,
+    page: params.page ?? 1,
+    pageSize: params.pageSize ?? 12,
+  })
+  const data = await fetchJson(`/articles${query}`, options)
+  return parsePaginated(data)
+}
+
+export async function getArticleDetail(slug, options = {}) {
+  if (!slug) return null
+  return await fetchJson(`/article/${encodeURIComponent(slug)}`, options)
 }
 
 export async function getVariables(names = [], options = {}) {

@@ -137,12 +137,12 @@ watch(selectedYear, async (year) => {
             </div>
 
             <div class="flex flex-1 flex-col p-6">
-              <p v-if="event.created_at" class="mb-3 text-sm font-semibold text-aqua">
-                {{ formatDate(event.created_at) }}
-              </p>
               <h2 class="text-2xl font-bold leading-tight text-slate-900">{{ event.title }}</h2>
               <p class="mt-3 line-clamp-4 leading-relaxed text-slate-600">
                 {{ event.description }}
+              </p>
+              <p v-if="event.created_at" class="mt-auto pt-5 text-right text-sm font-semibold text-aqua">
+                {{ formatDate(event.created_at) }}
               </p>
             </div>
           </div>
