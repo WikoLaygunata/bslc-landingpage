@@ -175,17 +175,33 @@ watch(selectedYear, async (year) => {
               </div>
             </div>
 
-            <div class="relative flex flex-wrap justify-center gap-5">
+            <div
+              class="relative gap-5"
+              :class="
+                group.titles.length <= 4
+                  ? group.titles.length === 4
+                    ? 'grid grid-cols-2 justify-items-center lg:grid-cols-4'
+                    : 'grid grid-cols-2 justify-items-center lg:grid-cols-3'
+                  : 'flex flex-wrap justify-center'
+              "
+            >
               <article
-                v-for="title in group.titles"
+                v-for="(title, index) in group.titles"
                 :key="title"
-                class="group flex w-full max-w-xs flex-col overflow-hidden rounded-3xl bg-slate-50 shadow-sm ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-aqua/30 sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.875rem)] xl:w-[calc(25%-1rem)]"
+                class="group flex flex-col overflow-hidden rounded-3xl bg-slate-50 shadow-sm ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-aqua/30"
+                :class="
+                  group.titles.length <= 4
+                    ? group.titles.length === 3 && index === 0
+                      ? 'w-full max-w-40 col-span-2 sm:max-w-xs lg:col-span-1'
+                      : 'w-full max-w-40 sm:max-w-xs'
+                    : 'w-full max-w-xs sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.875rem)] xl:w-[calc(25%-1rem)]'
+                "
               >
                 <div
-                  class="relative h-64 overflow-hidden"
+                  class="relative h-36 overflow-hidden sm:h-64"
                   :class="
                     getOfficer(title).image_path
-                      ? 'bg-white'
+                      ? 'bg-linear-to-br from-dark-green/6 via-white to-aqua/6'
                       : 'bg-linear-to-br from-dark-green to-aqua'
                   "
                 >
@@ -197,7 +213,7 @@ watch(selectedYear, async (year) => {
                   />
                   <div
                     v-else
-                    class="relative flex h-full w-full items-center justify-center text-5xl font-bold text-white"
+                    class="relative flex h-full w-full items-center justify-center text-3xl font-bold text-white sm:text-5xl"
                   >
                     <div
                       class="absolute -left-10 -top-10 h-32 w-32 rounded-full bg-white/10 blur-2xl"
@@ -213,11 +229,13 @@ watch(selectedYear, async (year) => {
                 </div>
 
                 <div
-                  class="flex min-h-36 flex-1 flex-col border-t border-slate-100 bg-white p-5 text-center"
+                  class="flex min-h-26 flex-1 flex-col border-t border-slate-100 bg-white p-3 text-center sm:min-h-36 sm:p-5"
                 >
-                  <h3 class="text-xl font-bold text-slate-900">{{ getOfficer(title).name }}</h3>
+                  <h3 class="text-sm font-bold text-slate-900 sm:text-xl">
+                    {{ getOfficer(title).name }}
+                  </h3>
                   <div class="flex flex-1 items-center justify-center">
-                    <p class="rounded-full bg-aqua/10 px-4 py-2 text-sm font-bold text-aqua">
+                    <p class="rounded-full bg-aqua/10 px-2 py-2 text-[10px] font-bold leading-tight text-aqua sm:px-4 sm:py-3 sm:text-sm">
                       {{ title }}
                     </p>
                   </div>

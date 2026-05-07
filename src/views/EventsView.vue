@@ -6,6 +6,8 @@ import { ensureEventsLoaded, ensureYearsLoaded, landingData } from '@/stores/dat
 const currentYear = new Date().getFullYear()
 const selectedYear = ref(currentYear)
 const selectedEvent = ref(null)
+const isLoadingSelectedYear = ref(true)
+let eventsLoadRequestId = 0
 
 const years = computed(() => {
   if (landingData.years.length > 0) return landingData.years
@@ -20,8 +22,13 @@ const events = computed(() => {
     return new Date(b.created_at) - new Date(a.created_at)
   })
 })
-const isLoadingEvents = computed(() => landingData.loading.eventsByYear[selectedYear.value])
 const eventsError = computed(() => landingData.errors.eventsByYear[selectedYear.value] || '')
+const isLoadingEvents = computed(
+  () =>
+    landingData.loading.years ||
+    landingData.loading.eventsByYear[selectedYear.value] ||
+    isLoadingSelectedYear.value,
+)
 const selectedEventIndex = computed(() => {
   if (!selectedEvent.value) return -1
   return events.value.findIndex((event) => event.id === selectedEvent.value.id)
@@ -60,6 +67,19 @@ function showNextEvent() {
   selectedEvent.value = events.value[nextIndex]
 }
 
+async function loadEventsForYear(year) {
+  const requestId = ++eventsLoadRequestId
+  isLoadingSelectedYear.value = true
+
+  try {
+    await ensureEventsLoaded(year)
+  } finally {
+    if (requestId === eventsLoadRequestId) {
+      isLoadingSelectedYear.value = false
+    }
+  }
+}
+
 onMounted(async () => {
   await ensureYearsLoaded()
 
@@ -69,11 +89,11 @@ onMounted(async () => {
     selectedYear.value = landingData.years[0]
   }
 
-  await ensureEventsLoaded(selectedYear.value)
+  await loadEventsForYear(selectedYear.value)
 })
 
 watch(selectedYear, async (year) => {
-  await ensureEventsLoaded(year)
+  await loadEventsForYear(year)
 })
 </script>
 
@@ -180,7 +200,7 @@ watch(selectedYear, async (year) => {
                   <div
                     class="absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-cyan/20 blur-2xl"
                   ></div>
-                  <span class="text-3xl font-bold text-white">{{ event.title }}</span>
+                  <span class="text-2xl font-bold text-white">{{ event.title }}</span>
                 </div>
                 <div
                   class="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-black/60 to-transparent"
@@ -197,8 +217,8 @@ watch(selectedYear, async (year) => {
               </div>
 
               <div class="flex flex-1 flex-col p-6">
-                <h2 class="text-2xl font-bold leading-tight text-slate-900">{{ event.title }}</h2>
-                <p class="mt-3 line-clamp-4 leading-relaxed text-slate-600">
+                <h2 class="text-lg font-bold leading-tight text-slate-900">{{ event.title }}</h2>
+                <p class="mt-3 line-clamp-4 leading-relaxed text-slate-600 text-sm">
                   {{ event.description }}
                 </p>
                 <p
