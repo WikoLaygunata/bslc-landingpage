@@ -68,8 +68,17 @@ const officersByTitle = computed(() => {
   }, {})
 })
 
+const visibleStructureGroups = computed(() => {
+  return structureGroups
+    .map((group) => ({
+      ...group,
+      titles: group.titles.filter((title) => Boolean(officersByTitle.value[title])),
+    }))
+    .filter((group) => group.titles.length > 0)
+})
+
 function getOfficer(title) {
-  return officersByTitle.value[title] || { title, name: 'Coming Soon', image_path: null }
+  return officersByTitle.value[title]
 }
 
 function initials(name = '') {
@@ -83,6 +92,7 @@ function initials(name = '') {
 }
 
 function groupLayoutClass(count) {
+  if (count === 5) return 'grid grid-cols-2 justify-items-center lg:grid-cols-4'
   if (count === 4) return 'grid grid-cols-2 justify-items-center lg:grid-cols-4'
   if (count === 3) return 'grid grid-cols-2 justify-items-center lg:grid-cols-3'
   if (count === 2) return 'grid grid-cols-2 justify-items-center'
@@ -94,6 +104,14 @@ function officerCardClass(count, index) {
   if (count <= 4) {
     if (count === 3 && index === 0) {
       return 'w-full max-w-40 col-span-2 sm:max-w-xs lg:col-span-1'
+    }
+
+    return 'w-full max-w-40 sm:max-w-xs'
+  }
+
+  if (count === 5) {
+    if (index === 0) {
+      return 'w-full max-w-40 col-span-2 sm:max-w-xs lg:col-span-4'
     }
 
     return 'w-full max-w-40 sm:max-w-xs'
@@ -194,7 +212,7 @@ watch(selectedYear, async (year) => {
 
         <div v-else class="mt-12 space-y-12">
           <section
-            v-for="group in structureGroups"
+            v-for="group in visibleStructureGroups"
             :key="group.name"
             class="relative overflow-hidden rounded-4xl bg-white/75 p-4 shadow-sm shadow-slate-200/60 ring-1 ring-slate-200/70 backdrop-blur md:p-7"
           >
