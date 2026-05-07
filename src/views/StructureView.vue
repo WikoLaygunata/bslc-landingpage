@@ -13,11 +13,21 @@ const structureGroups = [
   },
   {
     name: 'Regional Presidents',
-    titles: ['BSLC Kemanggisan Regional President', 'BSLC Alam Sutera Regional President'],
+    titles: [
+      'BSLC Kemanggisan Regional President',
+      'BSLC Alam Sutera Regional President',
+      'BSLC Bekasi Regional President',
+    ],
   },
   {
     name: 'Marketing',
-    titles: ['General Manager of Marketing', 'Manager Design', 'Manager Business Development'],
+    titles: [
+      'General Manager of Marketing',
+      'Manager Design',
+      'Manager Public Relation',
+      'Manager Business Development',
+      'Staff Design',
+    ],
   },
   {
     name: 'Learning',
@@ -25,6 +35,7 @@ const structureGroups = [
       'General Manager of Learning',
       'Manager Mentoring Alam Sutera',
       'Manager Mentoring Kemanggisan',
+      'Manager Mentoring',
       'Manager People Development',
     ],
   },
