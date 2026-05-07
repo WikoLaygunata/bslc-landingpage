@@ -71,6 +71,26 @@ function initials(name = '') {
     .toUpperCase()
 }
 
+function groupLayoutClass(count) {
+  if (count === 4) return 'grid grid-cols-2 justify-items-center lg:grid-cols-4'
+  if (count === 3) return 'grid grid-cols-2 justify-items-center lg:grid-cols-3'
+  if (count === 2) return 'grid grid-cols-2 justify-items-center'
+
+  return 'flex flex-wrap justify-center'
+}
+
+function officerCardClass(count, index) {
+  if (count <= 4) {
+    if (count === 3 && index === 0) {
+      return 'w-full max-w-40 col-span-2 sm:max-w-xs lg:col-span-1'
+    }
+
+    return 'w-full max-w-40 sm:max-w-xs'
+  }
+
+  return 'w-full max-w-xs sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.875rem)] xl:w-[calc(25%-1rem)]'
+}
+
 onMounted(async () => {
   await ensureYearsLoaded()
 
@@ -135,19 +155,26 @@ watch(selectedYear, async (year) => {
           <div
             v-for="group in structureGroups"
             :key="group.name"
-            class="rounded-3xl bg-white/90 p-6 shadow-sm ring-1 ring-slate-200"
+            class="rounded-4xl bg-white/75 p-4 shadow-sm ring-1 ring-slate-200/70 backdrop-blur md:p-7"
           >
-            <div class="h-6 w-48 animate-pulse rounded-full bg-slate-200"></div>
-            <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="h-5 w-40 animate-pulse rounded-full bg-slate-200 md:h-6 md:w-48"></div>
+            <div class="mt-6 gap-3 sm:gap-5" :class="groupLayoutClass(group.titles.length)">
               <div
-                v-for="title in group.titles"
+                v-for="(title, index) in group.titles"
                 :key="title"
-                class="overflow-hidden rounded-3xl bg-slate-50 ring-1 ring-slate-100"
+                class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-100"
+                :class="officerCardClass(group.titles.length, index)"
               >
-                <div class="h-64 animate-pulse bg-slate-200"></div>
-                <div class="space-y-4 p-5">
-                  <div class="mx-auto h-5 w-32 animate-pulse rounded-full bg-slate-200"></div>
-                  <div class="mx-auto h-4 w-44 animate-pulse rounded-full bg-slate-100"></div>
+                <div
+                  class="aspect-square animate-pulse bg-linear-to-br from-dark-green/10 via-slate-100 to-aqua/10"
+                ></div>
+                <div class="space-y-3 p-3 sm:space-y-4 sm:p-5">
+                  <div
+                    class="mx-auto h-4 w-24 animate-pulse rounded-full bg-slate-200 sm:h-5 sm:w-32"
+                  ></div>
+                  <div
+                    class="mx-auto h-3 w-28 animate-pulse rounded-full bg-slate-100 sm:h-4 sm:w-44"
+                  ></div>
                 </div>
               </div>
             </div>
@@ -158,58 +185,47 @@ watch(selectedYear, async (year) => {
           <section
             v-for="group in structureGroups"
             :key="group.name"
-            class="relative overflow-hidden rounded-4xl bg-white/90 p-5 shadow-lg shadow-slate-200/60 ring-1 ring-slate-200 md:p-8"
+            class="relative overflow-hidden rounded-4xl bg-white/75 p-4 shadow-sm shadow-slate-200/60 ring-1 ring-slate-200/70 backdrop-blur md:p-7"
           >
             <div class="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-aqua/5 blur-2xl"></div>
             <div
-              class="relative mb-7 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+              class="relative mb-5 flex flex-col gap-2 sm:mb-7 sm:flex-row sm:items-center sm:justify-between"
             >
               <div class="flex items-center gap-3">
-                <div class="h-10 w-2 rounded-full bg-aqua"></div>
+                <div class="h-8 w-1.5 rounded-full bg-aqua sm:h-10 sm:w-2"></div>
                 <div>
-                  <h2 class="text-2xl font-bold text-slate-900 md:text-3xl">{{ group.name }}</h2>
-                  <p class="text-sm font-medium text-slate-500">
+                  <h2 class="text-xl font-bold text-slate-900 md:text-3xl">{{ group.name }}</h2>
+                  <p class="text-xs font-medium text-slate-500 sm:text-sm">
                     {{ group.titles.length }} positions
                   </p>
                 </div>
               </div>
             </div>
 
-            <div
-              class="relative gap-5"
-              :class="
-                group.titles.length <= 4
-                  ? group.titles.length === 4
-                    ? 'grid grid-cols-2 justify-items-center lg:grid-cols-4'
-                    : 'grid grid-cols-2 justify-items-center lg:grid-cols-3'
-                  : 'flex flex-wrap justify-center'
-              "
-            >
+            <div class="relative gap-3 sm:gap-5" :class="groupLayoutClass(group.titles.length)">
               <article
                 v-for="(title, index) in group.titles"
                 :key="title"
-                class="group flex flex-col overflow-hidden rounded-3xl bg-slate-50 shadow-sm ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-aqua/30"
-                :class="
-                  group.titles.length <= 4
-                    ? group.titles.length === 3 && index === 0
-                      ? 'w-full max-w-40 col-span-2 sm:max-w-xs lg:col-span-1'
-                      : 'w-full max-w-40 sm:max-w-xs'
-                    : 'w-full max-w-xs sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.875rem)] xl:w-[calc(25%-1rem)]'
-                "
+                class="group flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 transition duration-300 hover:-translate-y-0.5 hover:shadow-md hover:shadow-aqua/10 hover:ring-aqua/25"
+                :class="officerCardClass(group.titles.length, index)"
               >
                 <div
-                  class="relative h-36 overflow-hidden sm:h-64"
+                  class="relative aspect-square overflow-hidden"
                   :class="
                     getOfficer(title).image_path
-                      ? 'bg-linear-to-br from-dark-green/6 via-white to-aqua/6'
+                      ? 'bg-linear-to-br from-dark-green/10 via-white to-aqua/10'
                       : 'bg-linear-to-br from-dark-green to-aqua'
                   "
                 >
+                  <div
+                    v-if="getOfficer(title).image_path"
+                    class="absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-aqua/15 blur-2xl sm:h-44 sm:w-44"
+                  ></div>
                   <img
                     v-if="getOfficer(title).image_path"
                     :src="getStorageUrl(getOfficer(title).image_path)"
                     :alt="getOfficer(title).name"
-                    class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    class="relative h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                   />
                   <div
                     v-else
@@ -229,13 +245,15 @@ watch(selectedYear, async (year) => {
                 </div>
 
                 <div
-                  class="flex min-h-26 flex-1 flex-col border-t border-slate-100 bg-white p-3 text-center sm:min-h-36 sm:p-5"
+                  class="flex min-h-20 flex-1 flex-col border-t border-slate-100 bg-white p-2.5 text-center sm:min-h-32 sm:p-5"
                 >
-                  <h3 class="text-sm font-bold text-slate-900 sm:text-xl">
+                  <h3 class="text-xs font-bold leading-snug text-slate-900 sm:text-lg">
                     {{ getOfficer(title).name }}
                   </h3>
                   <div class="flex flex-1 items-center justify-center">
-                    <p class="rounded-full bg-aqua/10 px-2 py-2 text-[10px] font-bold leading-tight text-aqua sm:px-4 sm:py-3 sm:text-sm">
+                    <p
+                      class="rounded-2xl bg-aqua/10 px-2 py-1.5 text-[9px] font-bold leading-snug text-aqua sm:px-4 sm:py-2 sm:text-sm"
+                    >
                       {{ title }}
                     </p>
                   </div>
