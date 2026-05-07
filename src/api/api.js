@@ -105,6 +105,7 @@ export async function getEvents(year, options = {}) {
 export async function getArticles(params = {}, options = {}) {
   const query = createQuery({
     search: params.search,
+    type: params.type,
     page: params.page ?? 1,
     pageSize: params.pageSize ?? 12,
   })

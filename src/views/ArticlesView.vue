@@ -6,11 +6,18 @@ import { createArticlesKey, ensureArticlesLoaded, landingData } from '@/stores/d
 
 const searchInput = ref('')
 const search = ref('')
+const articleType = ref('All')
 const page = ref(1)
 const pageSize = 12
+const typeOptions = ['All', 'Event', 'Info']
 
 const articlesKey = computed(() =>
-  createArticlesKey({ search: search.value, page: page.value, pageSize }),
+  createArticlesKey({
+    search: search.value,
+    type: articleType.value === 'All' ? '' : articleType.value,
+    page: page.value,
+    pageSize,
+  }),
 )
 const articlePage = computed(() => landingData.articlesByKey[articlesKey.value])
 const articles = computed(() => articlePage.value?.items || [])
@@ -62,11 +69,25 @@ function goToPage(nextPage) {
 }
 
 onMounted(() => {
-  ensureArticlesLoaded({ search: search.value, page: page.value, pageSize })
+  ensureArticlesLoaded({
+    search: search.value,
+    type: articleType.value === 'All' ? '' : articleType.value,
+    page: page.value,
+    pageSize,
+  })
 })
 
-watch([search, page], () => {
-  ensureArticlesLoaded({ search: search.value, page: page.value, pageSize })
+watch(articleType, () => {
+  page.value = 1
+})
+
+watch([search, page, articleType], () => {
+  ensureArticlesLoaded({
+    search: search.value,
+    type: articleType.value === 'All' ? '' : articleType.value,
+    page: page.value,
+    pageSize,
+  })
 })
 </script>
 
@@ -137,24 +158,38 @@ watch([search, page], () => {
           </div>
         </div>
 
-        <div
-          v-else-if="articles.length === 0"
-          class="mt-12 rounded-3xl border border-dashed border-aqua/30 bg-white/85 px-6 py-16 text-center shadow-xl shadow-slate-100"
-        >
-          <div
-            class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-aqua/10 text-3xl font-bold text-aqua"
-          >
-            ?
-          </div>
-          <p class="text-lg font-semibold text-slate-700">No articles found.</p>
-          <p class="mt-2 text-sm text-slate-500">Try another keyword.</p>
-        </div>
-
         <div v-else class="mt-12">
-          <p class="mb-5 text-sm font-medium text-slate-500">
-            Showing {{ articles.length }} of {{ meta.total }} articles
-          </p>
-          <div class="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">
+          <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm font-medium text-slate-500">
+              Showing {{ articles.length }} of {{ meta.total }} articles
+            </p>
+            <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-500">
+              Type
+              <select
+                v-model="articleType"
+                class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 outline-none transition focus:border-aqua focus:ring-2 focus:ring-aqua/20"
+              >
+                <option v-for="option in typeOptions" :key="option" :value="option">
+                  {{ option }}
+                </option>
+              </select>
+            </label>
+          </div>
+
+          <div
+            v-if="articles.length === 0"
+            class="rounded-3xl border border-dashed border-aqua/30 bg-white/85 px-6 py-16 text-center shadow-xl shadow-slate-100"
+          >
+            <div
+              class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-aqua/10 text-3xl font-bold text-aqua"
+            >
+              ?
+            </div>
+            <p class="text-lg font-semibold text-slate-700">No articles found.</p>
+            <p class="mt-2 text-sm text-slate-500">Try another keyword or type.</p>
+          </div>
+
+          <div v-else class="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">
             <RouterLink
               v-for="article in articles"
               :key="article.id"

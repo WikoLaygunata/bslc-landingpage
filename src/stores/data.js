@@ -54,7 +54,8 @@ export async function ensureYearsLoaded() {
 export async function ensureEventsLoaded(year = currentYear) {
   const selectedYear = Number(year) || currentYear
 
-  if (landingData.eventsByYear[selectedYear] || landingData.loading.eventsByYear[selectedYear]) return
+  if (landingData.eventsByYear[selectedYear] || landingData.loading.eventsByYear[selectedYear])
+    return
 
   landingData.loading.eventsByYear[selectedYear] = true
   landingData.errors.eventsByYear[selectedYear] = ''
@@ -71,7 +72,8 @@ export async function ensureEventsLoaded(year = currentYear) {
 export async function ensureOfficersLoaded(year = currentYear) {
   const selectedYear = Number(year) || currentYear
 
-  if (landingData.officersByYear[selectedYear] || landingData.loading.officersByYear[selectedYear]) return
+  if (landingData.officersByYear[selectedYear] || landingData.loading.officersByYear[selectedYear])
+    return
 
   landingData.loading.officersByYear[selectedYear] = true
   landingData.errors.officersByYear[selectedYear] = ''
@@ -86,11 +88,16 @@ export async function ensureOfficersLoaded(year = currentYear) {
 }
 
 export function createArticlesKey(params = {}) {
-  const search = String(params.search || '').trim().toLowerCase()
+  const search = String(params.search || '')
+    .trim()
+    .toLowerCase()
+  const type = String(params.type || '')
+    .trim()
+    .toLowerCase()
   const page = Number(params.page) || 1
   const pageSize = Number(params.pageSize) || 12
 
-  return `${search}|${page}|${pageSize}`
+  return `${search}|${type}|${page}|${pageSize}`
 }
 
 export async function ensureArticlesLoaded(params = {}) {
@@ -111,7 +118,11 @@ export async function ensureArticlesLoaded(params = {}) {
 }
 
 export async function ensureArticleDetailLoaded(slug) {
-  if (!slug || landingData.articleDetailsBySlug[slug] || landingData.loading.articleDetailsBySlug[slug])
+  if (
+    !slug ||
+    landingData.articleDetailsBySlug[slug] ||
+    landingData.loading.articleDetailsBySlug[slug]
+  )
     return
 
   landingData.loading.articleDetailsBySlug[slug] = true
