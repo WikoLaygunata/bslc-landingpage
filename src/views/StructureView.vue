@@ -9,7 +9,12 @@ const selectedYear = ref(currentYear)
 const structureGroups = [
   {
     name: 'Executive Committee',
-    titles: ['Chairman of BSLC', 'General Secretary of BSLC', 'General Treasurer of BSLC'],
+    titles: [
+      'Chairman of BSLC',
+      'Chairwoman of BSLC',
+      'General Secretary of BSLC',
+      'General Treasurer of BSLC',
+    ],
   },
   {
     name: 'Regional Presidents',
