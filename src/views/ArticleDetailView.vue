@@ -63,7 +63,7 @@ watch(slug, (nextSlug) => {
 <template>
   <main class="min-h-screen overflow-x-clip bg-white pb-10">
     <section
-      class="relative overflow-hidden bg-linear-to-b from-white via-slate-50 to-white px-4 py-10 sm:px-6 md:py-14"
+      class="relative overflow-hidden bg-linear-to-b from-white via-slate-50 to-white px-8 py-10 sm:px-10 md:py-14"
     >
       <div
         class="absolute right-0 top-0 h-72 w-72 translate-x-1/2 rounded-full bg-aqua/5 blur-3xl sm:h-96 sm:w-96 sm:translate-x-1/3 sm:bg-aqua/15"

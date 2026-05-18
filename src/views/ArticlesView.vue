@@ -197,7 +197,7 @@ watch([search, page, articleType], () => {
               class="group flex overflow-hidden rounded-3xl bg-white shadow-md ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:ring-aqua/30"
             >
               <div class="flex w-full flex-col">
-                <div class="relative h-36 overflow-hidden bg-dark-green sm:h-44">
+                <div class="relative h-32 overflow-hidden bg-dark-green sm:h-44">
                   <img
                     v-if="article.thumbnail"
                     :src="getStorageUrl(article.thumbnail)"
@@ -232,7 +232,7 @@ watch([search, page, articleType], () => {
 
                 <div class="flex flex-1 flex-col p-4">
                   <h2
-                    class="line-clamp-3 text-sm font-bold leading-snug text-slate-900 sm:text-base md:text-md"
+                    class="line-clamp-3 text-xs font-bold leading-snug text-slate-900 sm:text-sm md:text-base"
                   >
                     {{ article.title }}
                   </h2>
